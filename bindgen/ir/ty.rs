@@ -186,6 +186,14 @@ impl Type {
         }
     }
 
+    /// Cast this type to a float kind, or `None` if it is not an float type.
+    pub(crate) fn as_float(&self) -> Option<FloatKind> {
+        match self.kind {
+            TypeKind::Float(float_kind) => Some(float_kind),
+            _ => None,
+        }
+    }
+
     /// Is this a `const` qualified type?
     pub(crate) fn is_const(&self) -> bool {
         self.is_const

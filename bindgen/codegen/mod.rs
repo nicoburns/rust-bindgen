@@ -752,7 +752,21 @@ impl CodeGenerator for Var {
                     }
                     None
                 }
-                VarType::Float(f) => helpers::ast_ty::float_expr(f).ok(),
+                VarType::Float(f) => {
+                    let float_ty = var_ty
+                        .into_resolver()
+                        .through_type_aliases()
+                        .through_type_refs()
+                        .resolve(ctx)
+                        .expect_type();
+                    let float_kind = float_ty
+                        .as_float()
+                        .unwrap();
+                    let layout = float_ty
+                        .layout(ctx);
+
+                    helpers::ast_ty::float_expr(f, float_kind, layout).ok()
+                },
                 VarType::Char(c) => Some(c.to_token_stream()),
             };
 
